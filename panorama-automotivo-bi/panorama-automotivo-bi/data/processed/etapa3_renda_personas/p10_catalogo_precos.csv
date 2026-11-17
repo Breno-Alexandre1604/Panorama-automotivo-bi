@@ -1,0 +1,35 @@
+﻿ID;Veículo;Ano-modelo;Categoria;Tecnologia;Preço (R$);Tipo de preço;Referência;Fonte;Situação da verificação
+V01;Fiat Uno Mille Celeb 1.0 Flex 2p;2008;Usado antigo;Combustão;16821;Tabela FIPE;Out/2026;tabelafipebrasil.com (reproduz a FIPE);Conferido nesta rodada
+V02;Fiat Uno Mille Fire/Economy 1.0 4p;2008;Usado antigo;Combustão;21674;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V03;Fiat Palio 1.0 Fire Flex 2p;2008;Usado antigo;Combustão;22677;Tabela FIPE;Ago/2026;tabelafipebrasil.com;Conferido nesta rodada
+V04;Fiat Palio ELX 1.4 Fire Flex 4p;2008;Usado antigo;Combustão;28264;Tabela FIPE;Ago/2026;tabelafipebrasil.com;Conferido nesta rodada
+V05;Chevrolet Corsa Hatch Joy 1.0 Flex;2008;Usado antigo;Combustão;21200;Tabela FIPE;Jul/2026;tabelafipebrasil.com;Conferido nesta rodada
+V06;Chevrolet Celta 1.0 3p;2004;Usado antigo;Combustão;13755;Tabela FIPE;Out/2026;"tabelafipebrasil.com (ano 2004; não achei 2008)";Conferido nesta rodada
+V07;Chevrolet Onix Hatch Joy 1.0;2019;Usado/seminovo;Combustão;49326;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V08;Chevrolet Onix Hatch LT 1.0;2019;Usado/seminovo;Combustão;53269;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V09;Chevrolet Onix Hatch Activ 1.4 Aut.;2019;Usado/seminovo;Combustão;67619;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V10;Hyundai HB20S Unique 1.0 Mec.;2019;Usado/seminovo;Combustão;54021;Tabela FIPE;Jul/2026;carzin.com.br (reproduz a FIPE);Conferido nesta rodada
+V11;Hyundai HB20S Style 1.6 Aut.;2019;Usado/seminovo;Combustão;68345;Tabela FIPE;Jul/2026;carzin.com.br;Conferido nesta rodada
+V12;Chevrolet Tracker LT 1.0 Turbo Aut.;2022;Seminovo;Combustão;88933;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V13;Chevrolet Tracker LT 1.0 Turbo Aut.;2023;Seminovo;Combustão;91308;Tabela FIPE;Out/2026;tabelafipebrasil.com;Conferido nesta rodada
+V14;Chevrolet Tracker Premier 1.2 Turbo Aut.;2023;Seminovo;Combustão;104475;Tabela FIPE;Set/2026;tabelafipebrasil.com;Conferido nesta rodada
+V15;Toyota Corolla Cross XR 2.0 Flex Aut.;2022;Seminovo;Combustão;123776;Tabela FIPE;Set/2026;tabelafipebrasil.com;Conferido nesta rodada
+V16;Toyota Corolla Cross XRX 1.8 Híbrido;2022;Seminovo;Híbrido (HEV);139427;Tabela FIPE;Set/2026;tabelafipebrasil.com;Conferido nesta rodada
+V17;Fiat Mobi Like;2026;Zero-km;Combustão;72490;Tabela / oferta oficial;Nov/2026;Bright Consulting / UOL Carros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V18;Citroën C3 Live;2026;Zero-km;Combustão;77990;Tabela / oferta oficial;Nov/2026;Bright Consulting / UOL Carros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V19;Renault Kwid Evolution;2026;Zero-km;Combustão;82790;Tabela / oferta oficial;Nov/2026;Bright Consulting / UOL Carros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V20;Hyundai HB20 Comfort;2026;Zero-km;Combustão;96140;Tabela / oferta oficial;Nov/2026;Bright Consulting / UOL Carros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V21;Volkswagen Polo Track 1.0;2026;Zero-km;Combustão;97990;Tabela / oferta oficial;Nov/2026;"Bright Consulting / UOL Carros (arquivo recebido); Localiza cita R$ 96.690";"Do arquivo recebido; não reverificado"
+V22;Fiat Argo;2026;Zero-km;Combustão;98990;Tabela / oferta oficial;Nov/2026;Bright Consulting / UOL Carros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V23;BYD Dolphin Mini;2026;Zero-km;Elétrico (BEV);119990;Tabela / oferta oficial;Nov/2026;Auto+ / WM1 (arquivo recebido);"Do arquivo recebido; não reverificado"
+V24;Geely EX2;2026;Zero-km;Elétrico (BEV);123800;Tabela;Nov/2026;iCarros (arquivo recebido);"Do arquivo recebido; não reverificado"
+V25;Volkswagen T-Cross 200 TSI;2026;Zero-km;Combustão;151490;Tabela sugerida;Jul/2026;Tribuna PR (corte de preços da VW);Conferido nesta rodada
+V26;Volkswagen T-Cross Comfortline;2026;Zero-km;Combustão;171990;Tabela sugerida;Jul/2026;Tribuna PR (corte de preços da VW);Conferido nesta rodada
+V27;Volkswagen T-Cross Highline;2026;Zero-km;Combustão;186290;Tabela sugerida;Set/2026;Autoo (comparação de preços de 0 km);Conferido nesta rodada
+V28;Chevrolet Tracker Premier;2026;Zero-km;Combustão;177990;Tabela sugerida;Set/2026;Autoo (comparação de preços de 0 km);Conferido nesta rodada
+V29;Toyota Corolla Cross XRE (estoque 2026, em oferta);2026;Zero-km;Combustão;179590;Preço promocional;Jul/2026;Canaltech (09/07/2026);Conferido nesta rodada
+V30;Toyota Corolla Cross XRE (linha 2027, tabela);2027;Zero-km;Combustão;197120;Tabela;Jul/2026;Canaltech (09/07/2026);Conferido nesta rodada
+V31;GWM Haval H6 (a partir de);2026;Zero-km;Híbrido (PHEV/HEV);239000;Tabela (aprox.);2026 (mês não informado);"Motor Agora (cita ""cerca de R$ 239 mil"")";"Aproximado (reportagem cita ""cerca de"")"
+V32;BYD Song Plus;2026;Zero-km;Híbrido plug-in (PHEV);250000;Tabela (aprox.);2026 (mês não informado);"Motor Agora (cita ""encosta nos R$ 250 mil"")";"Aproximado (reportagem cita ""cerca de"")"
+V33;Honda Civic Advanced Hybrid;2026;Zero-km;Híbrido (HEV);266500;Preço de venda;Out/2026;Despachante Dok;Conferido nesta rodada
+V34;BYD Seal;2026;Zero-km;Elétrico (BEV);299990;Tabela sugerida;Out/2026;"Despachante Dok (descontos de até R$ 30 mil em loja); FIPE zero-km jul/26: R$ 298.452";Conferido nesta rodada

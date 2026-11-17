@@ -1,0 +1,162 @@
+// =====================================================================
+// PANORAMA AUTOMOTIVO – MEDIDAS DAX (Power BI)
+// ATENÇÃO: se o seu Power BI estiver em português (pt-BR), o separador de argumentos
+// do DAX costuma ser ";" em vez de ",". Troque ao colar, se aparecer erro de sintaxe.
+// Estas medidas foram escritas a partir da lógica validada em Python, mas NÃO foram
+// executadas no Power BI. Teste cada uma e ajuste nomes de colunas se necessário.
+// =====================================================================
+
+// ---------- 1) TABELAS DE PARÂMETRO (Modelagem > Nova tabela) ----------
+// Depois de criar, renomeie a coluna "Value" para o nome indicado.
+p_Renda   = GENERATESERIES(1500, 60000, 100)      // coluna: Renda
+p_Entrada = GENERATESERIES(0, 0.8, 0.05)          // coluna: Entrada
+p_Prazo   = GENERATESERIES(12, 84, 6)             // coluna: Prazo
+p_Juros   = GENERATESERIES(0.005, 0.035, 0.0001)  // coluna: Juros
+p_Regra   = GENERATESERIES(0.1, 0.4, 0.05)        // coluna: Regra
+
+// ---------- 2) VALORES ESCOLHIDOS PELO USUÁRIO ----------
+Renda Digitada     = SELECTEDVALUE(p_Renda[Renda], 5000)
+Entrada %          = SELECTEDVALUE(p_Entrada[Entrada], 0.2)
+Prazo (meses)      = SELECTEDVALUE(p_Prazo[Prazo], 48)
+Juros a.m.         = SELECTEDVALUE(p_Juros[Juros], 0.0204)
+Regra %            = SELECTEDVALUE(p_Regra[Regra], 0.2)
+SM 2026            = 1621
+
+// Se o usuário escolher uma persona no segmentador, usa a renda média dela;
+// senão, usa a renda digitada. (dim_faixa_renda NÃO tem relacionamento com dim_veiculo.)
+Renda Considerada =
+IF(
+    ISFILTERED(dim_faixa_renda[Persona]),
+    AVERAGE(dim_faixa_renda[Renda_media]),
+    [Renda Digitada]
+)
+
+// ---------- 3) CÁLCULO DO ORÇAMENTO (equivale a P9) ----------
+Parcela Máxima = [Renda Considerada] * [Regra %]
+
+Fator Anuidade =
+IF(
+    [Juros a.m.] = 0,
+    [Prazo (meses)],
+    (1 - POWER(1 + [Juros a.m.], -[Prazo (meses)])) / [Juros a.m.]
+)
+
+Valor Financiável = [Parcela Máxima] * [Fator Anuidade]
+
+Preço Máximo = DIVIDE([Valor Financiável], 1 - [Entrada %])
+
+// ---------- 4) CÁLCULO POR VEÍCULO (equivale a P11) ----------
+// Use em visuais com dim_veiculo[Veiculo_Ano] nas linhas.
+Preço do Veículo = SUM(dim_veiculo[Preco])
+
+Parcela do Veículo =
+SUMX(
+    dim_veiculo,
+    DIVIDE(dim_veiculo[Preco] * (1 - [Entrada %]), [Fator Anuidade])
+)
+
+% da Renda = DIVIDE([Parcela do Veículo], [Renda Considerada])
+
+Folga Mensal = [Parcela Máxima] - [Parcela do Veículo]
+
+Cabe (0/1) = IF([Parcela do Veículo] <= [Parcela Máxima], 1, 0)
+
+Situação =
+SWITCH(
+    TRUE(),
+    [Cabe (0/1)] = 1 && [Parcela do Veículo] <= [Parcela Máxima] * 0.75, "Folga confortável",
+    [Cabe (0/1)] = 1, "Cabe no limite da regra",
+    "Excede a regra"
+)
+
+Cor Situação = IF([Cabe (0/1)] = 1, "#008080", "#C0392B")
+
+Entrada Necessária % =
+MAX(0, 1 - DIVIDE([Valor Financiável], [Preço do Veículo]))
+
+Entrada Necessária R$ = [Entrada Necessária %] * [Preço do Veículo]
+
+Qtde Opções que Cabem =
+SUMX(
+    dim_veiculo,
+    IF(DIVIDE(dim_veiculo[Preco] * (1 - [Entrada %]), [Fator Anuidade]) <= [Parcela Máxima], 1, 0)
+)
+
+// ---------- 5) MELHOR OPÇÃO ----------
+// Definição usada: entre os veículos que cabem na regra (e que passam pelos segmentadores
+// de Condição/Propulsão), é o de MAIOR preço, ou seja, "o carro mais completo que você pode pagar".
+Melhor Opção =
+VAR Tab =
+    ADDCOLUMNS(
+        VALUES(dim_veiculo[Veiculo_Ano]),
+        "PrecoV", CALCULATE(MAX(dim_veiculo[Preco])),
+        "ParcelaV", DIVIDE(CALCULATE(MAX(dim_veiculo[Preco])) * (1 - [Entrada %]), [Fator Anuidade])
+    )
+VAR Cabem = FILTER(Tab, [ParcelaV] <= [Parcela Máxima])
+VAR Top1  = TOPN(1, Cabem, [PrecoV], DESC)
+RETURN
+    IF(COUNTROWS(Cabem) = 0, "Nenhuma opção cabe", MAXX(Top1, dim_veiculo[Veiculo_Ano]))
+
+Preço da Melhor Opção =
+VAR Tab =
+    ADDCOLUMNS(
+        VALUES(dim_veiculo[Veiculo_Ano]),
+        "PrecoV", CALCULATE(MAX(dim_veiculo[Preco])),
+        "ParcelaV", DIVIDE(CALCULATE(MAX(dim_veiculo[Preco])) * (1 - [Entrada %]), [Fator Anuidade])
+    )
+VAR Cabem = FILTER(Tab, [ParcelaV] <= [Parcela Máxima])
+RETURN MAXX(TOPN(1, Cabem, [PrecoV], DESC), [PrecoV])
+
+Parcela da Melhor Opção = DIVIDE([Preço da Melhor Opção] * (1 - [Entrada %]), [Fator Anuidade])
+
+Texto Resumo =
+"Com renda de R$ " & FORMAT([Renda Considerada], "#,0") &
+", entrada de " & FORMAT([Entrada %], "0%") &
+" e " & [Prazo (meses)] & " meses a " & FORMAT([Juros a.m.], "0.00%") & " ao mês, a parcela máxima é R$ " &
+FORMAT([Parcela Máxima], "#,0") & " e você pode pagar um carro de até R$ " & FORMAT([Preço Máximo], "#,0") & "."
+
+// ---------- 6) CONTEXTO DE RENDA (POF) ----------
+SM da Renda = DIVIDE([Renda Considerada], [SM 2026])
+
+Classe POF da Renda =
+VAR sm = [SM da Renda]
+RETURN
+    CALCULATE(
+        SELECTEDVALUE(dim_classe_pof[Classe]),
+        FILTER(ALL(dim_classe_pof), dim_classe_pof[SM_inferior] <= sm && dim_classe_pof[SM_superior_calc] > sm)
+    )
+
+% Famílias com Renda Menor que a Sua Classe =
+VAR sm = [SM da Renda]
+VAR Flt = FILTER(ALL(dim_classe_pof), dim_classe_pof[SM_inferior] <= sm && dim_classe_pof[SM_superior_calc] > sm)
+RETURN
+    CALCULATE(SELECTEDVALUE(dim_classe_pof[Pct_Acumulado]), Flt)
+        - CALCULATE(SELECTEDVALUE(dim_classe_pof[Pct_Familias]), Flt)
+
+Teto do Escopo (persona) = AVERAGE(dim_faixa_renda[Teto_escopo_max])
+
+Entrada Necessária p/ Teto do Escopo =
+MAX(0, 1 - DIVIDE([Valor Financiável], [Teto do Escopo (persona)]))
+
+// ---------- 7) MERCADO (pergunta 3.1) ----------
+Emplacamentos = SUM(fato_emplacamentos_mensal[Emplacamentos])
+Novos 0 km = SUM(fato_mercado_anual[Emplacamentos_Automoveis])
+Usados Estimados = SUM(fato_mercado_anual[Usados_Estimados])
+% Novos = DIVIDE([Novos 0 km], [Novos 0 km] + [Usados Estimados])
+% Usados = 1 - [% Novos]
+Usados por Novo = DIVIDE([Usados Estimados], [Novos 0 km])
+Var % Anual = AVERAGE(fato_mercado_anual[Var_Anual])
+Eletrificados (Anuário) = SUM(fato_mercado_anual[Eletrificados_Total])
+% Eletrificados (Anuário) = DIVIDE([Eletrificados (Anuário)], [Novos 0 km])
+
+// ---------- 8) ELETRIFICADOS (pergunta 3.2) ----------
+Unidades ABVE = SUM(fato_eletrificados_abve[Unidades])
+% da Tecnologia (ABVE) =
+DIVIDE([Unidades ABVE], CALCULATE([Unidades ABVE], ALL(dim_tecnologia[Tecnologia])))
+Unidades Modelo = SUM(fato_modelos[Unidades])
+Unidades Marca (Anuário) = SUM(fato_marcas_anuario[Unidades])
+
+Emplacamentos Geo = SUM(fato_geografia[Emplacamentos])
+Total Brasil no Período =
+CALCULATE(SUM(fato_geografia[Emplacamentos]), fato_geografia[Nivel] = "Região", ALLEXCEPT(fato_geografia, fato_geografia[Periodo]))
+% do Brasil = DIVIDE([Emplacamentos Geo], [Total Brasil no Período])
